@@ -1,0 +1,22 @@
+{
+  "name": "Parafia św. Jana Chrzciciela",
+  "short_name": "Parafia",
+  "description": "Aplikacja Parafii św. Jana Chrzciciela w Radomsku",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f0f4ff",
+  "theme_color": "#4a6fa5",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://placehold.co/192x192/4a6fa5/ffffff?text=PJ",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://placehold.co/512x512/4a6fa5/ffffff?text=PJ",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
