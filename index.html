@@ -3243,7 +3243,8 @@
       }
 
       if (intentionsTile && intentionsModal) {
-        intentionsTile.addEventListener('click', () => {
+        intentionsTile.addEventListener('click', (e) => {
+          e.preventDefault();
           renderIntentionsModal();
           window.openAppModal(intentionsModal, 'intencje');
         });
@@ -3296,7 +3297,8 @@
       };
 
       if (communitiesTile && communitiesModal) {
-        communitiesTile.addEventListener('click', () => {
+        communitiesTile.addEventListener('click', (e) => {
+          e.preventDefault();
           window.openAppModal(communitiesModal, 'wspolnoty');
           if (communitiesListView && communitiesDetailView) {
             communitiesListView.classList.remove('hidden');
@@ -3404,7 +3406,8 @@
       }
 
       if (cemeteryTile && cemeteryModal) {
-        cemeteryTile.addEventListener('click', () => {
+        cemeteryTile.addEventListener('click', (e) => {
+          e.preventDefault();
           window.openAppModal(cemeteryModal, 'cmentarz');
           if (cemeterySearch) {
             cemeterySearch.value = '';
@@ -3444,7 +3447,8 @@
       }
 
       if (newsTile && newsModal) {
-        newsTile.addEventListener('click', () => {
+        newsTile.addEventListener('click', (e) => {
+          e.preventDefault();
           window.openAppModal(newsModal, 'aktualnosci');
         });
       }
@@ -3533,7 +3537,8 @@
 
       if (genericModal) {
         genericTiles.forEach(tile => {
-          tile.addEventListener('click', () => {
+          tile.addEventListener('click', (e) => {
+            e.preventDefault();
             modalTitle.textContent = tile.getAttribute('data-title');
             modalBody.textContent = tile.getAttribute('data-body');
             window.openAppModal(genericModal, 'info', 'open', false);
@@ -3829,7 +3834,8 @@
           pmSubviews.forEach(hideEl);
         }
 
-        function openModal() {
+        function openModal(e) {
+          if (e) e.preventDefault();
           window.openAppModal(prayersModal, 'liturgia');
           resetAll();
           showFlex(pmDashboard);
