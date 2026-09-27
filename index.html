@@ -2013,11 +2013,12 @@
     body.theme-light .nav-item.active { color: var(--ink); }
     
     /* USTAWIENIA: Układ Menu */
+    body .menu {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
     body.layout-2 .menu {
       grid-template-columns: 1fr 1fr;
-    }
-    body .menu {
-      grid-template-columns: 1fr;
     }
 
     /* USTAWIENIA: Font */
@@ -4418,7 +4419,7 @@
         if(profileBtn) profileBtn.addEventListener('click', openProfile);
         if(navProfil) navProfil.addEventListener('click', openProfile);
         if(profilBackBtn) profilBackBtn.addEventListener('click', closeProfile);
-
+      })();
 
       // --- 13. OBSŁUGA DOLNEGO MENU NAWIGACYJNEGO ---
       (function() {
