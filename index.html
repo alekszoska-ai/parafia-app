@@ -3256,7 +3256,7 @@
 
       // --- WSPÓLNOTY I GRUPY ---
       const communitiesModal = document.getElementById('communities-modal');
-      const communitiesTile = document.querySelector('.tile-5');
+      const communitiesTile = document.getElementById('tile-groups');
       const communitiesBackBtn = document.getElementById('communitiesBackBtn');
       const communityDetailBackBtn = document.getElementById('communityDetailBackBtn');
       const communitiesListView = document.getElementById('communities-list-view');
@@ -3349,7 +3349,7 @@
 
       // --- CMENTARZ PARAFIALNY ---
       const cemeteryModal = document.getElementById('cemetery-modal');
-      const cemeteryTile = document.querySelector('.tile-6');
+      const cemeteryTile = document.getElementById('tile-cemetery');
       const cemeteryBackBtn = document.getElementById('cemeteryBackBtn');
       const cemeterySearch = document.getElementById('cemeterySearch');
       const cemeteryList = document.getElementById('cemetery-list');
@@ -3455,7 +3455,7 @@
       }
 
       // --- 4. OBSŁUGA KLIKNIĘĆ (MODAL O PARAFII) ---
-      const aboutTile = document.querySelector('.tile-4');
+      const aboutTile = document.getElementById('tile-about');
       const aboutModal = document.getElementById('about-parish-modal');
       const aboutBackBtn = document.getElementById('aboutBackBtn');
       const aboutSubTiles = document.querySelectorAll('.about-tile');
@@ -3525,8 +3525,7 @@
       });
 
       // --- 5. OBSŁUGA POZOSTAŁYCH KAFELKÓW (Zastępczy modal) ---
-      // Kafelki z atrapą (obecnie wszystkie oprócz pierwszych 4 i 6)
-      const genericTiles = document.querySelectorAll('.tile:not(.tile-1):not(.tile-2):not(.tile-3):not(.tile-4):not(.tile-5):not(.tile-6)');
+      const genericTiles = document.querySelectorAll('#tile-pilgrim, #tile-assistant');
       const genericModal = document.getElementById('modalOverlay');
       const modalTitle = document.getElementById('modalTitle');
       const modalBody = document.getElementById('modalBody');
@@ -3885,6 +3884,22 @@
 
         document.querySelectorAll('.pm-back-to-dash').forEach(function(btn) {
           btn.addEventListener('click', backToDash);
+        });
+
+        // DEV-CHECK
+        const allMenuTiles = [
+          { el: document.getElementById('tile-intentions'), target: document.getElementById('intentions-modal') },
+          { el: document.getElementById('tile-news'), target: document.getElementById('news-modal') },
+          { el: document.getElementById('tile-prayers'), target: document.getElementById('prayers-modal') },
+          { el: document.getElementById('tile-about'), target: document.getElementById('about-parish-modal') },
+          { el: document.getElementById('tile-groups'), target: document.getElementById('communities-modal') },
+          { el: document.getElementById('tile-cemetery'), target: document.getElementById('cemetery-modal') },
+          { el: document.getElementById('tile-pilgrim'), target: document.getElementById('modalOverlay') },
+          { el: document.getElementById('tile-assistant'), target: document.getElementById('modalOverlay') }
+        ];
+        allMenuTiles.forEach(item => {
+          if (!item.el) console.warn('DEV-CHECK: Brak elementu kafelka w DOM dla targetu:', item.target ? item.target.id : 'unknown');
+          if (!item.target) console.warn('DEV-CHECK: Brak modala docelowego w DOM dla kafelka:', item.el ? item.el.id : 'unknown');
         });
 
         // ── Mały Modlitewnik – baza treści modlitw ────────────
