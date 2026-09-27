@@ -1345,13 +1345,21 @@
       font-family: 'Georgia', serif;
       margin: 2px 0 6px;
     }
+    :root {
+      --brw-bg-opening: rgba(255,210,80,0.18); --brw-c-opening: #ffd95a;
+      --brw-bg-hymn: rgba(120,80,255,0.22); --brw-c-hymn: #c380ff;
+      --brw-bg-psalm: rgba(60,140,255,0.20); --brw-c-psalm: #7ab8ff;
+      --brw-bg-kantyk: rgba(60,200,120,0.20); --brw-c-kantyk: #5de8a0;
+      --brw-bg-prosby: rgba(255,120,80,0.18); --brw-c-prosby: #ff9470;
+      --brw-bg-modlitwa: rgba(255,200,80,0.18); --brw-c-modlitwa: #ffd95a;
+    }
     /* Color coding per section type */
-    .brw-icon-opening  { background: rgba(255,210,80,0.18); color: #ffd95a; }
-    .brw-icon-hymn     { background: rgba(120,80,255,0.22); color: #c380ff; }
-    .brw-icon-psalm    { background: rgba(60,140,255,0.20); color: #7ab8ff; }
-    .brw-icon-kantyk   { background: rgba(60,200,120,0.20); color: #5de8a0; }
-    .brw-icon-prosby   { background: rgba(255,120,80,0.18); color: #ff9470; }
-    .brw-icon-modlitwa { background: rgba(255,200,80,0.18); color: #ffd95a; }
+    .brw-icon-opening  { background: var(--brw-bg-opening); color: var(--brw-c-opening); }
+    .brw-icon-hymn     { background: var(--brw-bg-hymn); color: var(--brw-c-hymn); }
+    .brw-icon-psalm    { background: var(--brw-bg-psalm); color: var(--brw-c-psalm); }
+    .brw-icon-kantyk   { background: var(--brw-bg-kantyk); color: var(--brw-c-kantyk); }
+    .brw-icon-prosby   { background: var(--brw-bg-prosby); color: var(--brw-c-prosby); }
+    .brw-icon-modlitwa { background: var(--brw-bg-modlitwa); color: var(--brw-c-modlitwa); }
 
     /* Galeria (Archiwum) */
     .gallery-year-header {
@@ -1961,6 +1969,7 @@
       var b = document.body;
       if (window.appSettings.layout === '2') b.classList.add('layout-2');
       if (window.appSettings.theme === 'light') b.classList.add('theme-light');
+      else if (window.appSettings.theme === 'sepia') b.classList.add('theme-sepia');
       
       if (window.appSettings.fontScale === 'A+') b.classList.add('font-a-plus');
       else if (window.appSettings.fontScale === 'A++') b.classList.add('font-a-plus-plus');
@@ -1977,16 +1986,16 @@
       color: var(--ink);
     }
     body.theme-light .tile {
-      background: rgba(255, 255, 255, 0.92) !important;
-      border: 1px solid rgba(28, 45, 63, 0.10) !important;
+      background: linear-gradient(165deg, rgba(246,248,252,.94), rgba(210,220,233,.92)) !important;
+      border: 1px solid rgba(28,45,63,.12) !important;
       box-shadow: 0 6px 20px rgba(28, 45, 63, 0.14) !important;
     }
     body.theme-light .tile__label {
       color: #1C2D3F !important;
     }
     body.theme-light .tile__chip {
-      background: rgba(28, 45, 63, 0.10) !important;
-      border: 1px solid rgba(28, 45, 63, 0.08) !important;
+      background: rgba(28, 45, 63, 0.07) !important;
+      border: 1px solid rgba(28, 45, 63, 0.10) !important;
     }
     body.theme-light .tile__chip img {
       filter: invert(1);
@@ -2005,7 +2014,12 @@
       color: var(--ink) !important;
     }
     body.theme-light #cemetery-modal,
-    body.theme-light #profil-modal {
+    body.theme-light #profil-modal,
+    body.theme-light #about-parish-modal,
+    body.theme-light #news-modal,
+    body.theme-light #prayers-modal,
+    body.theme-light #intentions-modal,
+    body.theme-light #communities-modal {
       background: linear-gradient(135deg, rgba(230, 240, 255, 0.97), rgba(240, 245, 255, 0.92)) !important;
     }
     body.theme-light .pm-topbar-title, 
@@ -2018,11 +2032,69 @@
       color: var(--ink) !important;
     }
     body.theme-light .bottom-nav {
-      background: rgba(255, 255, 255, 0.9);
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      background: #FFFFFF !important;
+      border-top: 1px solid rgba(28, 45, 63, 0.08) !important;
     }
-    body.theme-light .nav-item { color: rgba(0, 0, 0, 0.5); }
-    body.theme-light .nav-item.active { color: var(--ink); }
+    body.theme-light .nav-item { color: #6B7684; }
+    body.theme-light .nav-item.active { color: #1C2D3F; }
+
+    /* USTAWIENIA: Motyw Sepia */
+    body.theme-sepia {
+      --glass: rgba(52,36,20,.58);
+      --glass-border: rgba(240,214,170,.32);
+      --ink: #F6EAD5;
+      --scrim: linear-gradient(180deg,rgba(46,32,18,.22),rgba(46,32,18,.58));
+      color: var(--ink);
+      
+      --brw-bg-opening: rgba(240,210,130,0.15); --brw-c-opening: #D8A55B;
+      --brw-bg-hymn: rgba(150,120,200,0.15); --brw-c-hymn: #9A7BBA;
+      --brw-bg-psalm: rgba(110,150,220,0.15); --brw-c-psalm: #6F92CC;
+      --brw-bg-kantyk: rgba(120,180,140,0.15); --brw-c-kantyk: #7BBA92;
+      --brw-bg-prosby: rgba(220,150,110,0.15); --brw-c-prosby: #C7876A;
+      --brw-bg-modlitwa: rgba(240,210,130,0.15); --brw-c-modlitwa: #D8A55B;
+    }
+    body.theme-sepia .tile__chip {
+      background: rgba(246,234,213,.10) !important;
+      border: 1px solid rgba(246,234,213,.18) !important;
+    }
+    body.theme-sepia .tile__chip img {
+      filter: sepia(1) saturate(1.6) brightness(1.15);
+    }
+    body.theme-sepia .welcome-banner {
+      background: #7A5A38 !important;
+    }
+    body.theme-sepia .bottom-nav {
+      background: rgba(32,22,12,.72) !important;
+      border-top: 1px solid rgba(240,214,170,.18) !important;
+    }
+    body.theme-sepia .nav-item { color: rgba(246,234,213,.5); }
+    body.theme-sepia .nav-item.active { color: #F6EAD5; }
+    
+    body.theme-sepia .pm-reading-box, 
+    body.theme-sepia .cemetery-card,
+    body.theme-sepia .accordion-item.pm-reading-box {
+      background: rgba(52,36,20,.6) !important;
+      border: 1px solid rgba(240,214,170,.2) !important;
+      color: var(--ink) !important;
+    }
+    body.theme-sepia #cemetery-modal,
+    body.theme-sepia #profil-modal,
+    body.theme-sepia #about-parish-modal,
+    body.theme-sepia #news-modal,
+    body.theme-sepia #prayers-modal,
+    body.theme-sepia #intentions-modal,
+    body.theme-sepia #communities-modal {
+      background: linear-gradient(135deg, rgba(62,46,30,0.97), rgba(52,36,20,0.92)) !important;
+    }
+    body.theme-sepia .pm-topbar-title, 
+    body.theme-sepia .news-topbar-title,
+    body.theme-sepia .news-back-btn,
+    body.theme-sepia .pm-reading-text,
+    body.theme-sepia .accordion-content,
+    body.theme-sepia .accordion-header,
+    body.theme-sepia .settings-btn[aria-checked="true"] {
+      color: var(--ink) !important;
+    }
     
     /* USTAWIENIA: Układ Menu */
     body .menu {
@@ -2260,8 +2332,9 @@
           <i class="fa-solid fa-moon"></i> Motyw
         </div>
         <div class="settings-segment" role="radiogroup" aria-label="Motyw">
-          <button class="settings-btn" data-setting="theme" data-value="dark" role="radio" aria-checked="true">Ciemne szkło</button>
-          <button class="settings-btn" data-setting="theme" data-value="light" role="radio" aria-checked="false">Jasne szkło</button>
+          <button class="settings-btn" data-setting="theme" data-value="dark" role="radio" aria-checked="true">Ciemne</button>
+          <button class="settings-btn" data-setting="theme" data-value="light" role="radio" aria-checked="false">Jasne</button>
+          <button class="settings-btn" data-setting="theme" data-value="sepia" role="radio" aria-checked="false">Sepia</button>
         </div>
       </div>
 
@@ -4307,8 +4380,9 @@
               else document.body.classList.remove('layout-2');
             }
             if (setting === 'theme') {
+              document.body.classList.remove('theme-light', 'theme-sepia');
               if (val === 'light') document.body.classList.add('theme-light');
-              else document.body.classList.remove('theme-light');
+              else if (val === 'sepia') document.body.classList.add('theme-sepia');
             }
             if (setting === 'fontScale') {
               setFontScale(val);
