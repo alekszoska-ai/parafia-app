@@ -2809,6 +2809,44 @@
   <!-- SKRYPTY APLIKACJI -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // --- SYSTEMOWA OBSŁUGA MODALI (Wstecz Android) ---
+      window.activeAppModals = [];
+      window.openAppModal = function(modalEl, hashId, cssClass = 'hidden', isRemove = true) {
+        if (!modalEl) return;
+        if (isRemove) modalEl.classList.remove(cssClass);
+        else modalEl.classList.add(cssClass);
+        
+        if (hashId) {
+          history.pushState({ modal: hashId }, '', '#' + hashId);
+          window.activeAppModals.push({ el: modalEl, hash: hashId, cssClass, isRemove });
+        }
+      };
+      window.closeAppModal = function(modalEl) {
+        if (!modalEl) return;
+        
+        const index = window.activeAppModals.findIndex(m => m.el === modalEl);
+        if (index !== -1) {
+          const m = window.activeAppModals.splice(index, 1)[0];
+          if (m.isRemove) m.el.classList.add(m.cssClass);
+          else m.el.classList.remove(m.cssClass);
+          
+          if (history.state && history.state.modal === m.hash) {
+            history.back();
+          }
+        } else {
+          // Fallback if closed directly
+          if (modalEl.classList.contains('open')) modalEl.classList.remove('open');
+          else modalEl.classList.add('hidden');
+        }
+      };
+      window.addEventListener('popstate', (e) => {
+        if (window.activeAppModals.length > 0) {
+          const m = window.activeAppModals.pop();
+          if (m.isRemove) m.el.classList.add(m.cssClass);
+          else m.el.classList.remove(m.cssClass);
+        }
+      });
+
 
       // --- 0. ZABICIE SERVICE WORKERA (aby wymusić odświeżenie cache'u) ---
       if ('serviceWorker' in navigator) {
@@ -3207,12 +3245,12 @@
       if (intentionsTile && intentionsModal) {
         intentionsTile.addEventListener('click', () => {
           renderIntentionsModal();
-          intentionsModal.classList.remove('hidden');
+          window.openAppModal(intentionsModal, 'intencje');
         });
       }
       if (intentionsBackBtn && intentionsModal) {
         intentionsBackBtn.addEventListener('click', () => {
-          intentionsModal.classList.add('hidden');
+          window.closeAppModal(intentionsModal);
         });
       }
 
@@ -3259,7 +3297,7 @@
 
       if (communitiesTile && communitiesModal) {
         communitiesTile.addEventListener('click', () => {
-          communitiesModal.classList.remove('hidden');
+          window.openAppModal(communitiesModal, 'wspolnoty');
           if (communitiesListView && communitiesDetailView) {
             communitiesListView.classList.remove('hidden');
             communitiesDetailView.classList.add('hidden');
@@ -3269,7 +3307,7 @@
       
       if (communitiesBackBtn && communitiesModal) {
         communitiesBackBtn.addEventListener('click', () => {
-          communitiesModal.classList.add('hidden');
+          window.closeAppModal(communitiesModal);
         });
       }
 
@@ -3367,7 +3405,7 @@
 
       if (cemeteryTile && cemeteryModal) {
         cemeteryTile.addEventListener('click', () => {
-          cemeteryModal.classList.remove('hidden');
+          window.openAppModal(cemeteryModal, 'cmentarz');
           if (cemeterySearch) {
             cemeterySearch.value = '';
             renderCemetery('');
@@ -3377,7 +3415,7 @@
 
       if (cemeteryBackBtn && cemeteryModal) {
         cemeteryBackBtn.addEventListener('click', () => {
-          cemeteryModal.classList.add('hidden');
+          window.closeAppModal(cemeteryModal);
         });
       }
 
@@ -3407,12 +3445,12 @@
 
       if (newsTile && newsModal) {
         newsTile.addEventListener('click', () => {
-          newsModal.classList.remove('hidden');
+          window.openAppModal(newsModal, 'aktualnosci');
         });
       }
       if (backBtn && newsModal) {
         backBtn.addEventListener('click', () => {
-          newsModal.classList.add('hidden');
+          window.closeAppModal(newsModal);
         });
       }
 
@@ -3443,7 +3481,7 @@
       if (aboutTile && aboutModal) {
         aboutTile.addEventListener('click', (e) => {
           e.preventDefault();
-          aboutModal.classList.remove('hidden');
+          window.openAppModal(aboutModal, 'oparafii');
           showAboutView(0); // Zawsze zaczynamy od siatki
         });
       }
@@ -3464,7 +3502,7 @@
             showAboutView(0);
           } else {
             // Zamknij cały modal "O Parafii"
-            aboutModal.classList.add('hidden');
+            window.closeAppModal(aboutModal);
           }
         });
       }
@@ -3499,13 +3537,13 @@
           tile.addEventListener('click', () => {
             modalTitle.textContent = tile.getAttribute('data-title');
             modalBody.textContent = tile.getAttribute('data-body');
-            genericModal.classList.add('open');
+            window.openAppModal(genericModal, 'info', 'open', false);
           });
         });
 
         if (modalCloseBtn) {
           modalCloseBtn.addEventListener('click', () => {
-            genericModal.classList.remove('open');
+            window.closeAppModal(genericModal);
           });
         }
       }
@@ -3527,7 +3565,7 @@
             currentGalleryImages = thumbs.map(t => t.src);
             currentImageIndex = index;
             updateLightboxImage();
-            lightbox.classList.remove('hidden');
+            window.openAppModal(lightbox, 'galeria');
           });
         });
       });
@@ -3539,7 +3577,7 @@
       }
 
       lightboxClose.addEventListener('click', () => {
-        lightbox.classList.add('hidden');
+        window.closeAppModal(lightbox);
       });
 
       lightboxPrev.addEventListener('click', (e) => {
@@ -3793,13 +3831,13 @@
         }
 
         function openModal() {
-          prayersModal.classList.remove('hidden');
+          window.openAppModal(prayersModal, 'liturgia');
           resetAll();
           showFlex(pmDashboard);
         }
 
         function closeModal() {
-          prayersModal.classList.add('hidden');
+          window.closeAppModal(prayersModal);
           resetAll();
         }
 
