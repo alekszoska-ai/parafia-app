@@ -16,6 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script src="./assets/brewiarz-data.js"></script>
+  <script src="./assets/spiewnik-data.js"></script>
 
   <style>
     /* ============================================================
@@ -1956,6 +1957,159 @@
       color: rgba(255, 255, 255, 0.40);
       font-weight: 500;
     }
+  
+    /* --- STREFA PIELGRZYMA --- */
+    .pilgrim-tabs {
+      display: flex;
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      padding: 4px;
+    }
+    .pilgrim-tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .pilgrim-tab.active {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+    .pilgrim-content {
+      display: none;
+    }
+    .pilgrim-content.active {
+      display: block;
+    }
+    .pilgrim-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .pilgrim-type-chip {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    body.theme-light .pilgrim-card {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.1);
+      color: var(--ink);
+    }
+    body.theme-light .pilgrim-tabs {
+      background: rgba(0,0,0,0.05);
+    }
+    body.theme-light .pilgrim-tab {
+      color: rgba(0,0,0,0.5);
+    }
+    body.theme-light .pilgrim-tab.active {
+      background: #fff;
+      color: var(--ink);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    body.theme-sepia .pilgrim-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(240,214,170,.18);
+    }
+    .spiewnik-song {
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 16px;
+    }
+    .spiewnik-song-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .spiewnik-tags {
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 12px;
+    }
+    .spiewnik-text {
+      font-family: monospace;
+      white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .spiewnik-concert-mode {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      color: #fff;
+      z-index: 10000;
+      overflow-y: auto;
+      padding: 24px;
+      font-size: 22px !important;
+      display: none;
+    }
+    .spiewnik-concert-mode.active {
+      display: block;
+    }
+    .concert-close {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      cursor: pointer;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.2);
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    body.theme-light .form-input {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.1);
+      color: var(--ink);
+    }
+    .pilgrim-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      text-align: center;
+      background: #3B6797;
+      color: #fff;
+      font-weight: 700;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .pilgrim-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+    .pilgrim-checkbox input {
+      width: 20px;
+      height: 20px;
+    }
+
   </style>
 </head>
 
@@ -2019,7 +2173,8 @@
     body.theme-light #news-modal,
     body.theme-light #prayers-modal,
     body.theme-light #intentions-modal,
-    body.theme-light #communities-modal {
+    body.theme-light #communities-modal,
+    body.theme-light #pilgrim-modal {
       background: linear-gradient(135deg, rgba(230, 240, 255, 0.97), rgba(240, 245, 255, 0.92)) !important;
     }
     body.theme-light .pm-topbar-title, 
@@ -2087,7 +2242,8 @@
     body.theme-sepia #news-modal,
     body.theme-sepia #prayers-modal,
     body.theme-sepia #intentions-modal,
-    body.theme-sepia #communities-modal {
+    body.theme-sepia #communities-modal,
+    body.theme-sepia #pilgrim-modal {
       background: linear-gradient(135deg, rgba(62,46,30,0.97), rgba(52,36,20,0.92)) !important;
     }
     body.theme-sepia .pm-topbar-title, 
@@ -2176,6 +2332,159 @@
       color: #1C2D3F;
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
+  
+    /* --- STREFA PIELGRZYMA --- */
+    .pilgrim-tabs {
+      display: flex;
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      padding: 4px;
+    }
+    .pilgrim-tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .pilgrim-tab.active {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+    .pilgrim-content {
+      display: none;
+    }
+    .pilgrim-content.active {
+      display: block;
+    }
+    .pilgrim-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .pilgrim-type-chip {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    body.theme-light .pilgrim-card {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.1);
+      color: var(--ink);
+    }
+    body.theme-light .pilgrim-tabs {
+      background: rgba(0,0,0,0.05);
+    }
+    body.theme-light .pilgrim-tab {
+      color: rgba(0,0,0,0.5);
+    }
+    body.theme-light .pilgrim-tab.active {
+      background: #fff;
+      color: var(--ink);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    body.theme-sepia .pilgrim-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(240,214,170,.18);
+    }
+    .spiewnik-song {
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 16px;
+    }
+    .spiewnik-song-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .spiewnik-tags {
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 12px;
+    }
+    .spiewnik-text {
+      font-family: monospace;
+      white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .spiewnik-concert-mode {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      color: #fff;
+      z-index: 10000;
+      overflow-y: auto;
+      padding: 24px;
+      font-size: 22px !important;
+      display: none;
+    }
+    .spiewnik-concert-mode.active {
+      display: block;
+    }
+    .concert-close {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      cursor: pointer;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.2);
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    body.theme-light .form-input {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.1);
+      color: var(--ink);
+    }
+    .pilgrim-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      text-align: center;
+      background: #3B6797;
+      color: #fff;
+      font-weight: 700;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .pilgrim-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+    .pilgrim-checkbox input {
+      width: 20px;
+      height: 20px;
+    }
+
   </style>
   <div class="bg-scrim"></div>
   <div class="app-shell">
@@ -2257,7 +2566,7 @@
           <span class="tile__label">Cmentarz</span>
           <span class="tile__chevron" aria-hidden="true">›</span>
         </a>
-        <a class="tile" href="#" id="tile-pilgrim" aria-label="Strefa Pielgrzyma" data-title="Strefa Pielgrzyma" data-body="Informacje o pielgrzymkach, rekolekcjach i wyjazdach organizowanych przez parafię.">
+        <a class="tile" href="#" id="tile-pilgrim" aria-label="Strefa Pielgrzyma">
           <span class="tile__chip"><img src="./assets/ryciny/rycina-07-pielgrzym.svg" alt="" width="40" height="40"></span>
           <span class="tile__label">Strefa Pielgrzyma</span>
           <span class="tile__chevron" aria-hidden="true">›</span>
@@ -3097,6 +3406,171 @@
     </div>
   </div>
 
+  
+  <!-- STREFA PIELGRZYMA MODAL -->
+  <div id="pilgrim-modal" class="hidden" role="dialog" aria-modal="true" aria-label="Strefa Pielgrzyma">
+    <div class="news-topbar" style="z-index:2;position:relative;">
+      <div class="news-back-btn" id="pilgrimBackBtn" role="button" aria-label="Zamknij" tabindex="0">
+        <i class="fa-solid fa-arrow-left"></i>
+      </div>
+      <span class="news-topbar-title">Strefa Pielgrzyma</span>
+    </div>
+    
+    <div class="news-scroll" style="position:relative; z-index:1; padding: 16px; color: rgba(255,255,255,0.9);">
+      
+      <div class="pilgrim-tabs" role="tablist">
+        <div class="pilgrim-tab active" data-tab="pielgrzymki" role="tab" tabindex="0">Nadchodzące</div>
+        <div class="pilgrim-tab" data-tab="spiewnik" role="tab" tabindex="0">Śpiewnik</div>
+        <div class="pilgrim-tab" data-tab="archiwum" role="tab" tabindex="0">Archiwum</div>
+        <div class="pilgrim-tab" data-tab="przewodnik" role="tab" tabindex="0">Śladami</div>
+      </div>
+
+      <!-- ZAKŁADKA 1: NADCHODZĄCE PIELGRZYMKI -->
+      <div id="tab-pielgrzymki" class="pilgrim-content active" role="tabpanel">
+        
+        <!-- ADMIN: podmienić na dane z panelu (etap 3) -->
+        <div class="pilgrim-card">
+          <div class="pilgrim-type-chip" style="background: rgba(59, 103, 151, 0.2); color: #7ab8ff;">🚌 Autokarowa</div>
+          <h3 style="margin-bottom: 8px;">Lourdes (Francja)</h3>
+          <p style="font-size: 13px; margin-bottom: 4px;"><i class="fa-regular fa-calendar"></i> 10-15 maja 2027 (6 dni)</p>
+          <p style="font-size: 13px; margin-bottom: 12px;"><i class="fa-solid fa-coins"></i> 1900 zł</p>
+          
+          <div class="accordion-item" style="margin-bottom: 12px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+            <div class="accordion-header" style="font-size: 13px; padding: 12px;" onclick="this.parentElement.classList.toggle('active')">
+              Szczegóły programu <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content" style="font-size: 13px; padding: 0 12px 12px;">
+              <p>Wyjazd nocny; 3 dni w Lourdes (Msze św., procesja ze świecami, Droga Krzyżowa, bramy „objęć Marii"); powrót. W cenie: transport, noclegi, wyżywienie HB, ubezpieczenie.</p>
+              <p style="margin-top: 8px; color: #ff9470;">Uwaga: Pierwszeństwo osób chorych i seniorów — akompaniament medyczny. Zapisy do 15 marca 2027.</p>
+            </div>
+          </div>
+          <button class="pilgrim-btn" onclick="openPilgrimForm('Lourdes')">Zapisz się</button>
+        </div>
+
+        <div class="pilgrim-card">
+          <div class="pilgrim-type-chip" style="background: rgba(120, 200, 120, 0.2); color: #5de8a0;">🚶 Piesza</div>
+          <h3 style="margin-bottom: 8px;">Jasna Góra</h3>
+          <p style="font-size: 13px; margin-bottom: 4px;"><i class="fa-regular fa-calendar"></i> 5-12 sierpnia 2027 (8 dni)</p>
+          <p style="font-size: 13px; margin-bottom: 4px;"><i class="fa-solid fa-route"></i> Dystans: ~230 km (~28 km/dzień)</p>
+          <p style="font-size: 13px; margin-bottom: 12px;"><i class="fa-solid fa-coins"></i> 350 zł</p>
+          
+          <div class="accordion-item" style="margin-bottom: 12px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+            <div class="accordion-header" style="font-size: 13px; padding: 12px;" onclick="this.parentElement.classList.toggle('active')">
+              Szczegóły programu <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content" style="font-size: 13px; padding: 0 12px 12px;">
+              <p>Trasa: Radomsko → ... → Jasna Góra. Noclegi w kościołach/szkołach. Wymagania: rozmowa z kapelanem + deklaracja kondycji.</p>
+              <p style="margin-top: 8px;"><a href="#" onclick="document.querySelector('[data-tab=przewodnik]').click()" style="color: #7ab8ff;">Plan treningowy znajdziesz w zakładce «Śladami pielgrzyma»</a></p>
+            </div>
+          </div>
+          <button class="pilgrim-btn" onclick="openPilgrimForm('Jasna Góra')">Zapisz się</button>
+        </div>
+
+        <div class="pilgrim-card">
+          <div class="pilgrim-type-chip" style="background: rgba(255, 120, 80, 0.2); color: #ff9470;">🎄 Dla dzieci</div>
+          <h3 style="margin-bottom: 8px;">Mikołajki u Św. Mikołaja</h3>
+          <p style="font-size: 13px; margin-bottom: 4px;"><i class="fa-regular fa-calendar"></i> 6 grudnia (sobota) 8:00–18:00</p>
+          <p style="font-size: 13px; margin-bottom: 12px;"><i class="fa-solid fa-coins"></i> 60 zł</p>
+          
+          <div class="accordion-item" style="margin-bottom: 12px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+            <div class="accordion-header" style="font-size: 13px; padding: 12px;" onclick="this.parentElement.classList.toggle('active')">
+              Szczegóły programu <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content" style="font-size: 13px; padding: 0 12px 12px;">
+              <p>Msza św. z opowieścią o św. Mikołaju-biskupie, zwiedzanie bazyliki i krypty relikwii, warsztaty, mikołajki w autokarze w powrocie.</p>
+              <p style="margin-top: 8px;">Dla: dzieci klasy 1–6 + rodzice/opiekunowie. Zapisy do 28 listopada, u katechetek.</p>
+            </div>
+          </div>
+          <button class="pilgrim-btn" onclick="openPilgrimForm('Mikołajki')">Zapisz się</button>
+        </div>
+
+        <!-- FORMULARZ ZAPISU (ukryty) -->
+        <div id="pilgrim-form-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center; padding:16px;">
+          <div class="pilgrim-card" style="width:100%; max-width:400px; background:#1C2D3F; border:1px solid rgba(255,255,255,0.2);">
+            <h3 id="form-dest-title" style="margin-bottom:16px; text-align:center;">Formularz zapisu</h3>
+            <input type="text" id="p-name" class="form-input" placeholder="Imię i nazwisko" required>
+            <input type="tel" id="p-phone" class="form-input" placeholder="Numer telefonu" required>
+            <textarea id="p-notes" class="form-input" placeholder="Uwagi (opcjonalnie)" rows="3"></textarea>
+            <button class="pilgrim-btn" onclick="submitPilgrimForm()">Wyślij zgłoszenie</button>
+            <button class="pilgrim-btn" style="background:transparent; border:1px solid rgba(255,255,255,0.3); margin-top:8px;" onclick="document.getElementById('pilgrim-form-overlay').style.display='none'">Anuluj</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ZAKŁADKA 2: ŚPIEWNIK -->
+      <div id="tab-spiewnik" class="pilgrim-content" role="tabpanel">
+        <input type="text" id="spiewnikSearch" class="form-input" placeholder="Szukaj pieśni (tytuł lub tekst)...">
+        
+        <div style="display:flex; gap:8px; overflow-x:auto; margin-bottom:16px; padding-bottom:8px;">
+          <span class="pilgrim-type-chip" style="background: rgba(255,255,255,0.2); white-space:nowrap; cursor:pointer;" onclick="filterSpiewnik('Wszystkie')">Wszystkie</span>
+          <span class="pilgrim-type-chip" style="background: rgba(255,255,255,0.1); white-space:nowrap; cursor:pointer;" onclick="filterSpiewnik('Maryjne')">Maryjne</span>
+          <span class="pilgrim-type-chip" style="background: rgba(255,255,255,0.1); white-space:nowrap; cursor:pointer;" onclick="filterSpiewnik('Wędrowne')">Wędrowne</span>
+          <span class="pilgrim-type-chip" style="background: rgba(255,255,255,0.1); white-space:nowrap; cursor:pointer;" onclick="filterSpiewnik('Wstawiennicze')">Wstawiennicze</span>
+          <span class="pilgrim-type-chip" style="background: rgba(255,255,255,0.1); white-space:nowrap; cursor:pointer;" onclick="filterSpiewnik('Różne')">Różne</span>
+        </div>
+
+        <div id="spiewnik-list"></div>
+      </div>
+
+      <!-- ZAKŁADKA 3: ARCHIWUM -->
+      <div id="tab-archiwum" class="pilgrim-content" role="tabpanel">
+        <!-- ADMIN: podmienić na dane z panelu (etap 3) -->
+        <div class="pilgrim-card">
+          <h3 style="margin-bottom: 4px;">Piesza Pielgrzymka na Jasną Górę</h3>
+          <p style="font-size: 13px; color: #7ab8ff; margin-bottom: 8px;">Sierpień 2025 • 150 uczestników</p>
+          <p style="font-size: 14px; margin-bottom: 12px; line-height: 1.5;">To był niezwykły czas łaski. Pokonaliśmy 230 kilometrów w strugach deszczu, ale z pieśnią na ustach. Dziękujemy wszystkim zaangażowanym w służbę porządkową!</p>
+          <div style="display:flex; gap:8px; overflow-x:auto;">
+            <img src="https://placehold.co/100x100?text=Zdjecie+1" style="border-radius:8px; cursor:pointer;" onclick="openLightbox(this.src)" alt="">
+            <img src="https://placehold.co/100x100?text=Zdjecie+2" style="border-radius:8px; cursor:pointer;" onclick="openLightbox(this.src)" alt="">
+            <img src="https://placehold.co/100x100?text=Zdjecie+3" style="border-radius:8px; cursor:pointer;" onclick="openLightbox(this.src)" alt="">
+          </div>
+        </div>
+
+        <div class="pilgrim-card">
+          <h3 style="margin-bottom: 4px;">Autokarowa Pielgrzymka do Rzymu</h3>
+          <p style="font-size: 13px; color: #7ab8ff; margin-bottom: 8px;">Kwiecień 2024 • 54 uczestników</p>
+          <p style="font-size: 14px; margin-bottom: 12px; line-height: 1.5;">Odwiedziliśmy najważniejsze bazyliki Rzymu. Wzięliśmy udział w Audiencji Generalnej na Placu św. Piotra. Wyjazd zintegrował naszą wspólnotę parafialną.</p>
+          <div style="display:flex; gap:8px; overflow-x:auto;">
+            <img src="https://placehold.co/100x100?text=Zdjecie+4" style="border-radius:8px; cursor:pointer;" onclick="openLightbox(this.src)" alt="">
+            <img src="https://placehold.co/100x100?text=Zdjecie+5" style="border-radius:8px; cursor:pointer;" onclick="openLightbox(this.src)" alt="">
+          </div>
+        </div>
+      </div>
+
+      <!-- ZAKŁADKA 4: ŚLADAMI PIELGRZYMA -->
+      <div id="tab-przewodnik" class="pilgrim-content" role="tabpanel">
+        <h3 style="margin-bottom: 12px; color: #7ab8ff;">Checklista pakowania</h3>
+        <p style="font-size:12px; margin-bottom:16px;">Zaznacz spakowane przedmioty (zapisywane automatycznie).</p>
+        <div id="pilgrim-checklist" style="background: rgba(0,0,0,0.1); padding: 12px; border-radius: 8px; margin-bottom: 24px;">
+          <!-- JS generates this -->
+        </div>
+
+        <h3 style="margin-bottom: 12px; color: #7ab8ff;">Plan przygotowania kondycyjnego (4 tyg.)</h3>
+        <div class="pilgrim-card">
+          <p style="font-size:13px; margin-bottom:8px;"><strong>Tydzień 1-2:</strong> Spacery 5 km co drugi dzień. Rozchodzenie nowych butów (to podstawa!).</p>
+          <p style="font-size:13px; margin-bottom:8px;"><strong>Tydzień 3:</strong> Szybki marsz z plecakiem (ok. 5 kg) - dystans 10-15 km w weekend.</p>
+          <p style="font-size:13px;"><strong>Tydzień 4:</strong> Zmniejszenie intensywności. Odpoczynek, dobre nawodnienie przed samą pielgrzymką.</p>
+        </div>
+
+        <h3 style="margin-bottom: 12px; color: #7ab8ff;">Słowniczek pojęć</h3>
+        <div class="pilgrim-card">
+          <p style="font-size:13px; margin-bottom:8px;"><strong>Muszla św. Jakuba:</strong> Tradycyjny symbol pielgrzymów, początkowo używany na Camino de Santiago, dziś powszechny znak pielgrzyma.</p>
+          <p style="font-size:13px; margin-bottom:8px;"><strong>Kapelan drogi:</strong> Kapłan przewodnik, pełniący opiekę duszpasterską w trakcie marszu (spowiedź, konferencje).</p>
+          <p style="font-size:13px; margin-bottom:8px;"><strong>Baza / Bashka:</strong> Miejsce odpoczynku, kuchnia polowa lub namiot medyczny poruszający się z pielgrzymką.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Tryb koncertowy (Śpiewnik) -->
+  <div id="spiewnik-concert" class="spiewnik-concert-mode">
+    <div class="concert-close" onclick="closeConcertMode()">
+      <i class="fa-solid fa-times"></i>
+    </div>
+    <div id="concert-content"></div>
+  </div>
+
   <!-- SKRYPTY APLIKACJI -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -3138,6 +3612,163 @@
         }
       });
 
+
+      
+      // --- STREFA PIELGRZYMA: Taby ---
+      const pilgrimTabs = document.querySelectorAll('.pilgrim-tab');
+      const pilgrimContents = document.querySelectorAll('.pilgrim-content');
+      pilgrimTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          pilgrimTabs.forEach(t => t.classList.remove('active'));
+          pilgrimContents.forEach(c => c.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+        });
+      });
+
+      const pilgrimBackBtn = document.getElementById('pilgrimBackBtn');
+      if (pilgrimBackBtn) {
+        pilgrimBackBtn.addEventListener('click', () => {
+          closeAppModal(document.getElementById('pilgrim-modal'));
+        });
+      }
+
+      // --- STREFA PIELGRZYMA: Formularz ---
+      window.openPilgrimForm = function(dest) {
+        document.getElementById('form-dest-title').innerText = 'Zapis: ' + dest;
+        document.getElementById('pilgrim-form-overlay').style.display = 'flex';
+      };
+      window.submitPilgrimForm = function() {
+        const name = document.getElementById('p-name').value;
+        const phone = document.getElementById('p-phone').value;
+        if (!name || !phone) {
+          alert('Imię, nazwisko i telefon są wymagane.');
+          return;
+        }
+        localStorage.setItem('pilgrim-last-signup', JSON.stringify({ name, phone, dest: document.getElementById('form-dest-title').innerText }));
+        alert('Zgłoszenie przyjęte — skontaktuje się z Tobą kancelaria.');
+        document.getElementById('pilgrim-form-overlay').style.display = 'none';
+        document.getElementById('p-name').value = '';
+        document.getElementById('p-phone').value = '';
+        document.getElementById('p-notes').value = '';
+      };
+
+      // --- STREFA PIELGRZYMA: Śpiewnik ---
+      let wakeLock = null;
+      window.openConcertMode = async function(songId) {
+        const song = (window.SPIEWNIK || []).find(s => s.id === songId);
+        if (!song) return;
+        
+        let html = '<h2 style="margin-bottom:16px;">' + song.title + '</h2>';
+        html += '<div class="spiewnik-text">' + song.text + '</div>';
+        document.getElementById('concert-content').innerHTML = html;
+        document.getElementById('spiewnik-concert').classList.add('active');
+        
+        try {
+          if ('wakeLock' in navigator) {
+            wakeLock = await navigator.wakeLock.request('screen');
+          }
+        } catch (err) {
+          console.warn('Wake Lock error:', err);
+        }
+      };
+      window.closeConcertMode = function() {
+        document.getElementById('spiewnik-concert').classList.remove('active');
+        if (wakeLock !== null) {
+          wakeLock.release().then(() => wakeLock = null);
+        }
+      };
+
+      window.filterSpiewnik = function(tag) {
+        // Zmień styl chipów
+        const chips = document.querySelectorAll('#tab-spiewnik .pilgrim-type-chip');
+        chips.forEach(c => {
+          if (c.innerText === tag) {
+            c.style.background = 'rgba(255,255,255,0.2)';
+          } else {
+            c.style.background = 'rgba(255,255,255,0.1)';
+          }
+        });
+        renderSpiewnik(tag, document.getElementById('spiewnikSearch').value);
+      };
+
+      function renderSpiewnik(tag = 'Wszystkie', query = '') {
+        const container = document.getElementById('spiewnik-list');
+        if (!container || !window.SPIEWNIK) return;
+        
+        query = query.toLowerCase();
+        let html = '';
+        
+        window.SPIEWNIK.forEach(song => {
+          if (tag !== 'Wszystkie' && !song.tags.includes(tag)) return;
+          if (query && !song.title.toLowerCase().includes(query) && !song.text.toLowerCase().includes(query)) return;
+          
+          html += '<div class="pilgrim-card spiewnik-song">';
+          html += '<div class="spiewnik-song-title">' + song.title + '</div>';
+          html += '<div class="spiewnik-tags">' + song.tags.join(', ') + '</div>';
+          html += '<div class="spiewnik-text">' + song.text.substring(0, 80) + '...</div>';
+          html += '<button class="pilgrim-btn" style="padding: 8px; font-size: 13px;" onclick="openConcertMode(\'' + song.id + '\')"><i class="fa-solid fa-microphone"></i> Tryb koncertowy (Pełen tekst)</button>';
+          html += '</div>';
+        });
+        
+        if (html === '') html = '<p>Brak pieśni spełniających kryteria.</p>';
+        container.innerHTML = html;
+      }
+      
+      const spSearch = document.getElementById('spiewnikSearch');
+      if (spSearch) {
+        spSearch.addEventListener('input', (e) => {
+          const activeTagChip = Array.from(document.querySelectorAll('#tab-spiewnik .pilgrim-type-chip')).find(c => c.style.background === 'rgba(255, 255, 255, 0.2)');
+          const tag = activeTagChip ? activeTagChip.innerText : 'Wszystkie';
+          renderSpiewnik(tag, e.target.value);
+        });
+      }
+
+      // --- STREFA PIELGRZYMA: Checklista ---
+      const checklistItems = [
+        'Obuwie rozchodzone (wygodne)', 'Pelerynka przeciwdeszczowa', 'Apteczka (plastry, bandaż, leki stałe)',
+        'Kubek, sztućce, menażka', 'Śpiwór i karimata', 'Latarka (czołówka)', 'Powerbank i kabel', 
+        'Dokumenty (dowód, karta NFZ)', 'Różaniec', 'Nakrycie głowy (czapka/chusta)', 'Krem z filtrem UV',
+        'Zapasowe skarpetki (bezszwowe)', 'Ręcznik szybkoschnący', 'Bidon na wodę', 'Prowiant na pierwszy dzień'
+      ];
+      
+      function renderChecklist() {
+        const container = document.getElementById('pilgrim-checklist');
+        if (!container) return;
+        
+        let saved = [];
+        try {
+          saved = JSON.parse(localStorage.getItem('pilgrim-checklist') || '[]');
+        } catch(e) {}
+        
+        let html = '';
+        checklistItems.forEach((item, idx) => {
+          const isChecked = saved.includes(idx) ? 'checked' : '';
+          html += `
+            <label class="pilgrim-checkbox">
+              <input type="checkbox" data-idx="${idx}" ${isChecked}>
+              <span>${item}</span>
+            </label>
+          `;
+        });
+        container.innerHTML = html;
+        
+        container.querySelectorAll('input').forEach(chk => {
+          chk.addEventListener('change', () => {
+            let current = [];
+            container.querySelectorAll('input:checked').forEach(c => {
+              current.push(parseInt(c.dataset.idx));
+            });
+            localStorage.setItem('pilgrim-checklist', JSON.stringify(current));
+          });
+        });
+      }
+
+      // Inicjalizacja przy starcie
+      setTimeout(() => {
+        renderSpiewnik();
+        renderChecklist();
+      }, 500);
 
       // --- 0. ZABICIE SERVICE WORKERA (aby wymusić odświeżenie cache'u) ---
       if ('serviceWorker' in navigator) {
@@ -4060,7 +4691,7 @@
           { el: document.getElementById('tile-about'), target: document.getElementById('about-parish-modal') },
           { el: document.getElementById('tile-groups'), target: document.getElementById('communities-modal') },
           { el: document.getElementById('tile-cemetery'), target: document.getElementById('cemetery-modal') },
-          { el: document.getElementById('tile-pilgrim'), target: document.getElementById('modalOverlay') },
+          { el: document.getElementById('tile-pilgrim'), target: document.getElementById('pilgrim-modal') },
           { el: document.getElementById('tile-assistant'), target: document.getElementById('modalOverlay') }
         ];
         allMenuTiles.forEach(item => {
