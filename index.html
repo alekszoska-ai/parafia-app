@@ -1574,7 +1574,7 @@
       display: none !important;
     }
 
-    #cemetery-modal {
+    #cemetery-modal, #profil-modal {
       position: fixed;
       inset: 0;
       z-index: 210;
@@ -1586,7 +1586,7 @@
       transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
       overflow: hidden;
     }
-    #cemetery-modal.hidden {
+    #cemetery-modal.hidden, #profil-modal.hidden {
       opacity: 0;
       pointer-events: none;
       transform: translateY(18px);
@@ -1948,6 +1948,117 @@
 </head>
 
 <body>
+  <script>
+    (function() {
+      var defaultSettings = { layout: '1', theme: 'dark', fontScale: 'A', sound: 'true' };
+      var stored = localStorage.getItem('parafia-settings');
+      window.appSettings = stored ? JSON.parse(stored) : defaultSettings;
+      
+      var b = document.body;
+      if (window.appSettings.layout === '2') b.classList.add('layout-2');
+      if (window.appSettings.theme === 'light') b.classList.add('theme-light');
+      
+      if (window.appSettings.fontScale === 'A+') b.classList.add('font-a-plus');
+      else if (window.appSettings.fontScale === 'A++') b.classList.add('font-a-plus-plus');
+      else b.classList.add('font-a');
+    })();
+  </script>
+  <style>
+    /* USTAWIENIA: Motyw Jasny */
+    body.theme-light {
+      --glass: rgba(255, 255, 255, 0.60);
+      --glass-border: rgba(255, 255, 255, 0.65);
+      --ink: #1C2D3F;
+      background-color: #f0f4f8;
+      background-image: none;
+      color: var(--ink);
+    }
+    body.theme-light .tile__chip {
+      background: rgba(28, 45, 63, 0.06) !important;
+    }
+    body.theme-light .tile__chip img {
+      filter: invert(1);
+    }
+    body.theme-light .pm-reading-box, 
+    body.theme-light .cemetery-card,
+    body.theme-light .accordion-item.pm-reading-box {
+      background: rgba(255,255,255,0.6) !important;
+      border: 1px solid rgba(0,0,0,0.1) !important;
+      color: var(--ink) !important;
+    }
+    body.theme-light .pm-topbar-title, 
+    body.theme-light .news-topbar-title,
+    body.theme-light .news-back-btn,
+    body.theme-light .pm-reading-text,
+    body.theme-light .accordion-content,
+    body.theme-light .accordion-header,
+    body.theme-light .settings-btn[aria-checked="true"] {
+      color: var(--ink) !important;
+    }
+    body.theme-light .app-header {
+      background: rgba(255, 255, 255, 0.85);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    body.theme-light .header-parish-name,
+    body.theme-light .header-date,
+    body.theme-light .header-liturgy,
+    body.theme-light .header-date-sep {
+      color: var(--ink) !important;
+    }
+    body.theme-light .bottom-nav {
+      background: rgba(255, 255, 255, 0.9);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    body.theme-light .nav-item { color: rgba(0, 0, 0, 0.5); }
+    body.theme-light .nav-item.active { color: var(--ink); }
+    
+    /* USTAWIENIA: Układ Menu */
+    body.layout-2 .menu {
+      grid-template-columns: 1fr 1fr;
+    }
+    body .menu {
+      grid-template-columns: 1fr;
+    }
+
+    /* USTAWIENIA: Font */
+    body.font-a { --fs-base: 17px; }
+    body.font-a-plus { --fs-base: 19px; }
+    body.font-a-plus-plus { --fs-base: 21px; }
+
+    .settings-segment {
+      display: flex;
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    body.theme-light .settings-segment {
+      background: rgba(0,0,0,0.06);
+    }
+    .settings-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+    }
+    body.theme-light .settings-btn {
+      color: rgba(0,0,0,0.5);
+    }
+    .settings-btn[aria-checked="true"] {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+    body.theme-light .settings-btn[aria-checked="true"] {
+      background: rgba(0,0,0,0.15);
+      color: var(--ink);
+    }
+  </style>
   <div class="bg-scrim"></div>
   <div class="app-shell">
 
@@ -2074,6 +2185,67 @@
       <h2 class="modal-title" id="modalTitle">Kafelek</h2>
       <p class="modal-body" id="modalBody">Treść</p>
       <button class="modal-close-btn" id="modalCloseBtn">Zamknij</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: PROFIL / USTAWIENIA ===== -->
+  <div id="profil-modal" class="hidden" role="dialog" aria-modal="true" aria-label="Profil i Ustawienia">
+    <div class="news-symbols-bg" aria-hidden="true">
+      <i class="fa-solid fa-gear symbol-1"></i>
+    </div>
+    <div class="news-topbar" style="z-index:2;position:relative;">
+      <div class="news-back-btn" id="profilBackBtn" role="button" aria-label="Zamknij profil" tabindex="0">
+        <i class="fa-solid fa-arrow-left"></i>
+      </div>
+      <span class="news-topbar-title">Ustawienia Aplikacji</span>
+    </div>
+    <div class="news-scroll" style="position:relative; z-index:1; padding: 16px;">
+      
+      <!-- Układ menu -->
+      <div class="pm-reading-box" style="margin-bottom: 16px; padding: 16px; font-size: 14px;">
+        <div style="font-size:16px; font-weight:800; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-border-all"></i> Układ menu
+        </div>
+        <div class="settings-segment" role="radiogroup" aria-label="Układ menu">
+          <button class="settings-btn" data-setting="layout" data-value="1" role="radio" aria-checked="true">1 kolumna</button>
+          <button class="settings-btn" data-setting="layout" data-value="2" role="radio" aria-checked="false">2 kolumny</button>
+        </div>
+      </div>
+
+      <!-- Motyw -->
+      <div class="pm-reading-box" style="margin-bottom: 16px; padding: 16px; font-size: 14px;">
+        <div style="font-size:16px; font-weight:800; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-moon"></i> Motyw
+        </div>
+        <div class="settings-segment" role="radiogroup" aria-label="Motyw">
+          <button class="settings-btn" data-setting="theme" data-value="dark" role="radio" aria-checked="true">Ciemne szkło</button>
+          <button class="settings-btn" data-setting="theme" data-value="light" role="radio" aria-checked="false">Jasne szkło</button>
+        </div>
+      </div>
+
+      <!-- Wielkość czcionki -->
+      <div class="pm-reading-box" style="margin-bottom: 16px; padding: 16px; font-size: 14px;">
+        <div style="font-size:16px; font-weight:800; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-font"></i> Wielkość czcionki
+        </div>
+        <div class="settings-segment" role="radiogroup" aria-label="Wielkość czcionki">
+          <button class="settings-btn font-scale-btn" data-setting="fontScale" data-value="A" role="radio" aria-checked="true">A</button>
+          <button class="settings-btn font-scale-btn" data-setting="fontScale" data-value="A+" role="radio" aria-checked="false">A+</button>
+          <button class="settings-btn font-scale-btn" data-setting="fontScale" data-value="A++" role="radio" aria-checked="false">A++</button>
+        </div>
+      </div>
+
+      <!-- Dźwięki -->
+      <div class="pm-reading-box" style="margin-bottom: 16px; padding: 16px; font-size: 14px;">
+        <div style="font-size:16px; font-weight:800; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-volume-high"></i> Dźwięki
+        </div>
+        <div class="settings-segment" role="radiogroup" aria-label="Dźwięki">
+          <button class="settings-btn" data-setting="sound" data-value="true" role="radio" aria-checked="true">Włącz</button>
+          <button class="settings-btn" data-setting="sound" data-value="false" role="radio" aria-checked="false">Wyłącz</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -4155,33 +4327,98 @@
         renderIntentions();
       })();
 
-      // --- 12. GLOBALNY SYSTEM ROZMIARU CZCIONKI ---
+      // --- 12. GLOBALNY SYSTEM ROZMIARU CZCIONKI I USTAWIEN ---
       (function() {
-        var fontBtns = document.querySelectorAll('.font-btn');
-        var savedSize = localStorage.getItem('app-font-size') || 'normal';
+        var headerFontBtns = document.querySelectorAll('.font-btn');
+        var settingsBtns = document.querySelectorAll('.settings-btn');
         
-        function applyFontSize(size) {
-          document.documentElement.setAttribute('data-font-size', size);
-          fontBtns.forEach(function(btn) {
-            if (btn.getAttribute('data-size') === size) {
-              btn.classList.add('active');
+        function updateSettingsUI() {
+          // Update header font resizer
+          var sizeMap = { 'A': 'normal', 'A+': 'large', 'A++': 'xlarge' };
+          var activeSize = sizeMap[window.appSettings.fontScale] || 'normal';
+          
+          headerFontBtns.forEach(function(btn) {
+            btn.classList.toggle('active', btn.getAttribute('data-size') === activeSize);
+          });
+          
+          // Update profile modal buttons
+          settingsBtns.forEach(function(btn) {
+            var setting = btn.getAttribute('data-setting');
+            var val = btn.getAttribute('data-value');
+            if (window.appSettings[setting] === val) {
+              btn.setAttribute('aria-checked', 'true');
             } else {
-              btn.classList.remove('active');
+              btn.setAttribute('aria-checked', 'false');
             }
           });
         }
         
-        applyFontSize(savedSize);
+        function setFontScale(level) {
+          window.appSettings.fontScale = level;
+          
+          // Map to data-font-size for existing CSS compatibility
+          var sizeMap = { 'A': 'normal', 'A+': 'large', 'A++': 'xlarge' };
+          document.documentElement.setAttribute('data-font-size', sizeMap[level]);
+          
+          document.body.classList.remove('font-a', 'font-a-plus', 'font-a-plus-plus');
+          if (level === 'A+') document.body.classList.add('font-a-plus');
+          else if (level === 'A++') document.body.classList.add('font-a-plus-plus');
+          else document.body.classList.add('font-a');
+          
+          saveSettings();
+        }
+
+        function saveSettings() {
+          localStorage.setItem('parafia-settings', JSON.stringify(window.appSettings));
+          updateSettingsUI();
+        }
         
-        fontBtns.forEach(function(btn) {
+        // Initial setup for existing CSS logic
+        setFontScale(window.appSettings.fontScale);
+        
+        headerFontBtns.forEach(function(btn) {
           btn.addEventListener('click', function(e) {
             e.stopPropagation();
             var size = this.getAttribute('data-size');
-            applyFontSize(size);
-            localStorage.setItem('app-font-size', size);
+            var reverseMap = { 'normal': 'A', 'large': 'A+', 'xlarge': 'A++' };
+            setFontScale(reverseMap[size] || 'A');
           });
         });
-      })();
+        
+        settingsBtns.forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var setting = this.getAttribute('data-setting');
+            var val = this.getAttribute('data-value');
+            window.appSettings[setting] = val;
+            
+            if (setting === 'layout') {
+              if (val === '2') document.body.classList.add('layout-2');
+              else document.body.classList.remove('layout-2');
+            }
+            if (setting === 'theme') {
+              if (val === 'light') document.body.classList.add('theme-light');
+              else document.body.classList.remove('theme-light');
+            }
+            if (setting === 'fontScale') {
+              setFontScale(val);
+            }
+            saveSettings();
+          });
+        });
+        
+        // Event listeners for opening Profile Modal
+        var profileBtn = document.getElementById('profileBtn');
+        var navProfil = document.getElementById('nav-profil');
+        var profilModal = document.getElementById('profil-modal');
+        var profilBackBtn = document.getElementById('profilBackBtn');
+        
+        function openProfile() { window.openAppModal(profilModal); }
+        function closeProfile() { window.closeAppModal(profilModal); }
+        
+        if(profileBtn) profileBtn.addEventListener('click', openProfile);
+        if(navProfil) navProfil.addEventListener('click', openProfile);
+        if(profilBackBtn) profilBackBtn.addEventListener('click', closeProfile);
+
 
       // --- 13. OBSŁUGA DOLNEGO MENU NAWIGACYJNEGO ---
       (function() {
