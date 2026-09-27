@@ -751,68 +751,185 @@ window.BREWIARZ_DATA = {
 // ─── Silnik brewiarza ─────────────────────────────────────────────────────────
 window.BREWIARZ = {
 
-  /** Oblicza tydzień psałterza (1–4) i nazwę okresu dla danej daty */
   obliczTydzien: function(data) {
-    var y = data.getFullYear();
-    var a = y%19, b = Math.floor(y/100), c = y%100;
-    var d = Math.floor(b/4), e = b%4;
-    var f = Math.floor((b+8)/25), g = Math.floor((b-f+1)/3);
-    var h = (19*a+b-d-g+15)%30;
-    var i = Math.floor(c/4), k = c%4;
-    var l = (32+2*e+2*i-h-k)%7;
-    var m = Math.floor((a+11*h+22*l)/451);
-    var month = Math.floor((h+l-7*m+114)/31);
-    var day = ((h+l-7*m+114)%31)+1;
-    var easter = new Date(y, month-1, day);
+    const y = data.getFullYear();
+    const a = y % 19;
+    const b = Math.floor(y / 100);
+    const c = y % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const month = Math.floor((h + l - 7 * m + 114) / 31);
+    const day = ((h + l - 7 * m + 114) % 31) + 1;
+    const easter = new Date(Date.UTC(y, month - 1, day));
+    
+    function addDays(dt, n) { return new Date(dt.getTime() + n * 86400000); }
+    function startOfDay(dt) { return new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate())); }
+    const d_target = startOfDay(data);
+    
+    const christmas = new Date(Date.UTC(y, 11, 25));
+    const epiphany = new Date(Date.UTC(y, 0, 6));
+    let daysToSunday = (7 - epiphany.getUTCDay()) % 7;
+    if (daysToSunday === 0) daysToSunday = 1; 
+    let baptism = addDays(epiphany, daysToSunday);
 
-    function addDays(dt, n) { var r = new Date(dt); r.setDate(r.getDate()+n); return r; }
+    const prevChristmas = new Date(Date.UTC(y - 1, 11, 25));
+    let prevEpiphany = new Date(Date.UTC(y - 1, 0, 6));
+    let prevDaysToSunday = (7 - prevEpiphany.getUTCDay()) % 7;
+    if (prevDaysToSunday === 0) prevDaysToSunday = 1;
+    const prevBaptism = addDays(prevEpiphany, prevDaysToSunday);
 
-    var christmas = new Date(y, 11, 25);
-    var epiphany  = new Date(y, 0, 6);
-    var ashWed    = addDays(easter, -46);
-    var pentecost = addDays(easter, 49);
-    var palmSun   = addDays(easter, -7);
-
-    // Adwent
-    var xmasDay = christmas.getDay();
-    var advent1 = addDays(christmas, -(xmasDay===0 ? 28 : 21+xmasDay));
-    if (data >= advent1 && data < christmas) {
-      var wAdv = Math.floor((data - advent1) / 604800000);
-      return { okres: 'adwent', tydzien: (wAdv%4)+1, nazwaOkresu: 'Adwent' };
+    const ashWed = addDays(easter, -46);
+    const palmSun = addDays(easter, -7);
+    const pentecost = addDays(easter, 49);
+    
+    let xmasDay = christmas.getUTCDay();
+    if (xmasDay === 0) xmasDay = 7; 
+    let advent1 = addDays(christmas, -(21 + xmasDay));
+    
+    let okres = 'zwykly';
+    let nazwaOkresu = '';
+    let tydzien = 0;
+    let numer = 0;
+    let displayPsalter = true;
+    let hasProperTexts = false;
+    
+    const mm = d_target.getUTCMonth() + 1;
+    const dd = d_target.getUTCDate();
+    const dateStr = mm + '-' + dd;
+    const solemnities = ['1-1','1-6','3-19','3-25','6-24','6-29','8-15','11-1','12-8','12-25'];
+    
+    const trinity = addDays(pentecost, 7);
+    const corpus = addDays(pentecost, 18);
+    const sacredHeart = addDays(pentecost, 26);
+    
+    if (d_target >= advent1 && d_target < christmas) {
+      okres = 'adwent';
+      nazwaOkresu = 'Adwent';
+      let daysSinceAdv1 = Math.floor((d_target - advent1) / 86400000);
+      let weekAdv = Math.floor(daysSinceAdv1 / 7) + 1;
+      numer = weekAdv;
+      tydzien = weekAdv;
+    } 
+    else if (d_target >= prevChristmas && d_target <= baptism) {
+      okres = 'bozenarodzenie';
+      nazwaOkresu = 'Okres Bożego Narodzenia';
+      displayPsalter = false;
+      hasProperTexts = true;
+    }
+    else if (d_target >= christmas) { 
+      okres = 'bozenarodzenie';
+      nazwaOkresu = 'Okres Bożego Narodzenia';
+      displayPsalter = false;
+      hasProperTexts = true;
+    }
+    else if (d_target >= ashWed && d_target < palmSun) {
+      okres = 'wielkipost';
+      nazwaOkresu = 'Wielki Post';
+      let daysSinceAsh = Math.floor((d_target - addDays(ashWed, -3)) / 86400000); 
+      let wpSunday1 = addDays(ashWed, 4);
+      if (d_target < wpSunday1) {
+         numer = 0; 
+         tydzien = 4;
+      } else {
+         let daysSince1Sun = Math.floor((d_target - wpSunday1) / 86400000);
+         let weekLent = Math.floor(daysSince1Sun / 7) + 1;
+         numer = weekLent;
+         tydzien = ((weekLent - 1) % 4) + 1;
+      }
+    }
+    else if (d_target >= palmSun && d_target < easter) {
+      okres = 'wielkitydzien';
+      nazwaOkresu = 'Wielki Tydzień';
+      displayPsalter = false;
+      hasProperTexts = true;
+    }
+    else if (d_target >= easter && d_target <= pentecost) {
+      okres = 'wielkanoc';
+      nazwaOkresu = 'Okres Wielkanocny';
+      displayPsalter = false;
+      hasProperTexts = true;
+      let daysSinceEaster = Math.floor((d_target - easter) / 86400000);
+      numer = Math.floor(daysSinceEaster / 7) + 1;
+    }
+    else {
+      okres = 'zwykly';
+      nazwaOkresu = 'Okres Zwykły';
+      
+      let christKing = addDays(advent1, -7);
+      
+      if (d_target >= pentecost && d_target < advent1) {
+        let daysToChristKing = Math.floor((christKing - d_target) / 86400000);
+        let weeksToChristKing = Math.floor(daysToChristKing / 7);
+        numer = 34 - weeksToChristKing;
+      } 
+      else if (d_target > baptism && d_target < ashWed) {
+        let daysSinceBaptism = Math.floor((d_target - baptism) / 86400000);
+        let weeksSinceBaptism = Math.floor(daysSinceBaptism / 7);
+        numer = 1 + weeksSinceBaptism; 
+      }
+      tydzien = ((numer - 1) % 4) + 1;
     }
 
-    // Okres Wielkanocny
-    if (data >= easter && data <= pentecost) {
-      var wEast = Math.floor((data - easter) / 604800000);
-      return { okres: 'zwykly', tydzien: (wEast%4)+1, nazwaOkresu: 'Okres Wielkanocny' };
+    let isSolemnity = false;
+    if (solemnities.includes(dateStr)) isSolemnity = true;
+    if (d_target.getTime() === trinity.getTime() || d_target.getTime() === corpus.getTime() || d_target.getTime() === sacredHeart.getTime()) {
+      isSolemnity = true;
+    }
+    if (isSolemnity) {
+      displayPsalter = false;
+      hasProperTexts = true;
+    }
+    
+    let tytul = '';
+    let dzTyg = d_target.getUTCDay();
+    let dni = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
+    
+    if (okres === 'zwykly') {
+      if (dzTyg === 0) tytul = numer + '. Niedziela Zwykła';
+      else tytul = dni[dzTyg] + ', ' + numer + '. Tydzień Zwykły';
+    } else if (okres === 'adwent') {
+      if (dzTyg === 0) tytul = numer + '. Niedziela Adwentu';
+      else tytul = dni[dzTyg] + ', ' + numer + '. Tydzień Adwentu';
+    } else if (okres === 'wielkipost') {
+      if (numer === 0) tytul = dni[dzTyg] + ' po Popielcu';
+      else if (dzTyg === 0) tytul = numer + '. Niedziela Wielkiego Postu';
+      else tytul = dni[dzTyg] + ', ' + numer + '. Tydzień W. Postu';
+    } else if (okres === 'wielkitydzien') {
+      if (dzTyg === 0) tytul = 'Niedziela Palmowa';
+      else tytul = dni[dzTyg] + ' Wielkiego Tygodnia';
+    } else if (okres === 'wielkanoc') {
+      if (dzTyg === 0) {
+        if (numer === 1) tytul = 'Niedziela Zmartwychwstania Pańskiego';
+        else if (numer === 8) tytul = 'Niedziela Zesłania Ducha Świętego';
+        else tytul = numer + '. Niedziela Wielkanocna';
+      } else tytul = dni[dzTyg] + ', ' + numer + '. Tydzień Wielkanocny';
+    } else if (okres === 'bozenarodzenie') {
+      if (d_target.getTime() === epiphany.getTime()) tytul = 'Objawienie Pańskie (Trzech Króli)';
+      else if (d_target.getTime() === christmas.getTime()) tytul = 'Boże Narodzenie';
+      else tytul = dni[dzTyg] + ' w Okresie Bożego Narodzenia';
     }
 
-    // Wielki Post
-    if (data >= ashWed && data < palmSun) {
-      var wLent = Math.floor((data - ashWed) / 604800000);
-      return { okres: 'zwykly', tydzien: (wLent%4)+1, nazwaOkresu: 'Wielki Post' };
-    }
-
-    // Okres Zwykły (przed WP)
-    var baptism = addDays(epiphany, (7 - epiphany.getDay()) % 7 || 7);
-    if (data >= baptism && data < ashWed) {
-      var wOrd = Math.floor((data - baptism) / 604800000) + 1;
-      return { okres: 'zwykly', tydzien: ((wOrd-1)%4)+1, nazwaOkresu: 'Okres Zwykły', tydzienOrd: wOrd+1 };
-    }
-
-    // Okres Zwykły (po Zesłaniu)
-    if (data > pentecost) {
-      // Tydzień 9 = pierwsza pełna niedziela po Pięćdziesiątnicy (w przybliżeniu)
-      var wPost = Math.floor((data - pentecost) / 604800000) + 9;
-      return { okres: 'zwykly', tydzien: ((wPost-1)%4)+1, nazwaOkresu: 'Okres Zwykły', tydzienOrd: wPost };
-    }
-
-    return { okres: 'zwykly', tydzien: 1, nazwaOkresu: 'Okres Zwykły' };
+    return {
+      okres: okres,
+      nazwaOkresu: nazwaOkresu,
+      tydzien: tydzien,
+      numer: numer,
+      displayPsalter: displayPsalter,
+      hasProperTexts: hasProperTexts,
+      tytul: tytul
+    };
   },
 
-  /** Pobiera dane dla danej daty i horarium */
   pobierzDane: function(data, hora) {
     var info = this.obliczTydzien(data);
+    if (!info.displayPsalter) return null; // placeholder dla tekstów własnych
     var dni = ['niedziela','poniedzialek','wtorek','sroda','czwartek','piatek','sobota'];
     var dzien = dni[data.getDay()];
     var db = window.BREWIARZ_DATA[info.okres] || window.BREWIARZ_DATA.zwykly;
@@ -821,14 +938,15 @@ window.BREWIARZ = {
     return tyg[dzien][hora] || null;
   },
 
-  /** Opis tygodnia psałterza */
   opisTygodnia: function(data) {
     var info = this.obliczTydzien(data);
+    if (!info.displayPsalter) {
+       return info.tytul; // Jeśli to Wielkanoc, Święto, itd. pokaż tytuł
+    }
     var rz = ['','I','II','III','IV'];
     return info.nazwaOkresu + ' \u00b7 Tydzień ' + rz[info.tydzien] + ' Psałterza';
   },
 
-  /** Nazwa dnia tygodnia (klucz) */
   kluczDnia: function(data) {
     return ['niedziela','poniedzialek','wtorek','sroda','czwartek','piatek','sobota'][data.getDay()];
   }
