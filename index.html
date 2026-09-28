@@ -1542,6 +1542,137 @@
     }
 
     /* ============================================================
+       MODAL: DZIŚ W PARAFII
+    ============================================================ */
+    #dzis-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 210;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, rgba(8, 18, 45, 0.97), rgba(15, 30, 70, 0.92));
+      backdrop-filter: blur(12px) saturate(160%);
+      -webkit-backdrop-filter: blur(12px) saturate(160%);
+      transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
+    #dzis-modal.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(18px);
+    }
+    .dzis-section {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .dzis-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 8px;
+    }
+    .dzis-liturgy-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+    .dzis-liturgy-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+    }
+    .dzis-mass-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 13px;
+    }
+    .dzis-mass-row:last-child { border-bottom: none; }
+    .dzis-mass-time {
+      font-weight: 700;
+      color: #7ab8ff;
+      min-width: 42px;
+      flex-shrink: 0;
+    }
+    .dzis-mass-intention { color: rgba(255,255,255,0.85); }
+    .dzis-prayer-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.88);
+      font-style: italic;
+    }
+    .dzis-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(122,184,255,0.12);
+      border: 1px solid rgba(122,184,255,0.25);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #7ab8ff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 8px;
+      min-height: 44px;
+      transition: background .2s;
+    }
+    .dzis-btn:last-child { margin-bottom: 0; }
+    .dzis-btn:hover, .dzis-btn:focus-visible {
+      background: rgba(122,184,255,0.22);
+      outline: 2px solid #7ab8ff;
+      outline-offset: 2px;
+    }
+    .dzis-event-card {
+      background: rgba(122,184,255,0.07);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .dzis-event-card:hover { background: rgba(122,184,255,0.14); }
+    .dzis-event-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+    .dzis-event-date { font-size: 12px; color: rgba(255,255,255,0.55); }
+    /* Theme light overrides */
+    body.theme-light #dzis-modal {
+      background: linear-gradient(135deg, rgba(230,240,255,0.97), rgba(240,245,255,0.92)) !important;
+    }
+    body.theme-light .dzis-section { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.09); }
+    body.theme-light .dzis-liturgy-title { color: #1C2D3F; }
+    body.theme-light .dzis-liturgy-sub { color: #5a6a7e; }
+    body.theme-light .dzis-section-label { color: rgba(28,45,63,0.45); }
+    body.theme-light .dzis-mass-time { color: #2a5a9c; }
+    body.theme-light .dzis-mass-intention { color: #1C2D3F; }
+    body.theme-light .dzis-prayer-text { color: #2a3a50; }
+    body.theme-light .dzis-btn { background: rgba(42,90,156,0.08); border-color: rgba(42,90,156,0.2); color: #2a5a9c; }
+    body.theme-light .dzis-event-title { color: #1C2D3F; }
+    body.theme-light .dzis-event-date { color: #5a6a7e; }
+    /* Theme sepia overrides */
+    body.theme-sepia #dzis-modal {
+      background: linear-gradient(135deg, rgba(60,40,20,0.97), rgba(80,55,25,0.92)) !important;
+    }
+    body.theme-sepia .dzis-section { background: rgba(246,234,213,0.06); border-color: rgba(246,234,213,0.12); }
+    body.theme-sepia .dzis-liturgy-title { color: #F6EAD5; }
+    body.theme-sepia .dzis-liturgy-sub { color: rgba(246,234,213,0.6); }
+    body.theme-sepia .dzis-section-label { color: rgba(246,234,213,0.4); }
+    body.theme-sepia .dzis-mass-time { color: #d4a45a; }
+    body.theme-sepia .dzis-mass-intention { color: #F6EAD5; }
+    body.theme-sepia .dzis-prayer-text { color: rgba(246,234,213,0.88); }
+    body.theme-sepia .dzis-btn { background: rgba(212,164,90,0.12); border-color: rgba(212,164,90,0.25); color: #d4a45a; }
+    body.theme-sepia .dzis-event-title { color: #F6EAD5; }
+    body.theme-sepia .dzis-event-date { color: rgba(246,234,213,0.55); }
+
+    /* ============================================================
        MODAL: INTENCJE MSZALNE
     ============================================================ */
     #intentions-modal {
@@ -2640,9 +2771,9 @@
         <span class="nav-label">Modlitwa</span>
       </button>
 
-      <button class="nav-item" id="nav-wiadomosci" aria-label="Wiadomości">
-        <i class="fa-solid fa-envelope"></i>
-        <span class="nav-label">Wiadomości</span>
+      <button class="nav-item" id="nav-dzis" aria-label="Dziś w parafii">
+        <i class="fa-solid fa-calendar-day"></i>
+        <span class="nav-label">Dziś</span>
       </button>
 
       <button class="nav-item" id="nav-profil" aria-label="Profil">
@@ -2998,6 +3129,72 @@
     <!-- Lista ogłoszeń (przewijana) -->
     <div class="news-scroll">
       <div id="news-list"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: DZIŚ W PARAFII ===== -->
+  <div id="dzis-modal" class="hidden" role="dialog" aria-modal="true" aria-label="Dziś w parafii">
+    <div class="news-topbar" style="z-index:2;position:relative;">
+      <div class="news-back-btn" id="dzisBackBtn" role="button" aria-label="Zamknij" tabindex="0">
+        <i class="fa-solid fa-arrow-left"></i>
+      </div>
+      <span class="news-topbar-title">Dziś w parafii</span>
+    </div>
+
+    <div class="news-scroll" id="dzis-scroll" style="padding:16px;">
+
+      <!-- A) NAGŁÓWEK LITURGICZNY -->
+      <div class="dzis-section" id="dzis-header-section">
+        <div class="dzis-section-label"><i class="fa-solid fa-sun" style="margin-right:5px;"></i>Dzień liturgiczny</div>
+        <div class="dzis-liturgy-title" id="dzis-date-title">—</div>
+        <div class="dzis-liturgy-sub" id="dzis-liturgy-sub">—</div>
+      </div>
+
+      <!-- B) MSZE DZIŚ -->
+      <div class="dzis-section">
+        <div class="dzis-section-label"><i class="fa-solid fa-church" style="margin-right:5px;"></i>Msze święte dziś</div>
+        <div id="dzis-masses-list">
+          <div style="color:rgba(255,255,255,0.45);font-size:13px;">Ładowanie…</div>
+        </div>
+      </div>
+
+      <!-- C) INTENCJE DZIŚ -->
+      <div class="dzis-section">
+        <div class="dzis-section-label"><i class="fa-solid fa-hands-praying" style="margin-right:5px;"></i>Intencje mszalne dziś</div>
+        <div id="dzis-intentions-list">
+          <div style="color:rgba(255,255,255,0.45);font-size:13px;">Ładowanie…</div>
+        </div>
+      </div>
+
+      <!-- D) CZYTANIA / BREWIARZ -->
+      <div class="dzis-section">
+        <div class="dzis-section-label"><i class="fa-solid fa-book-open" style="margin-right:5px;"></i>Liturgia Godzin</div>
+        <button class="dzis-btn" id="dzis-btn-jutrznia" aria-label="Otwórz Jutrznię w Brewiarzu">
+          <i class="fa-solid fa-sun"></i>
+          <span>Jutrznia — otwarcie dnia</span>
+        </button>
+        <button class="dzis-btn" id="dzis-btn-nieszpory" aria-label="Otwórz Nieszpory w Brewiarzu">
+          <i class="fa-solid fa-moon"></i>
+          <span>Nieszpory — zakończenie dnia</span>
+        </button>
+        <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:6px;">
+          Teksty czytań po uzyskaniu licencji liturgicznej — docelowo wyświetlane inline.
+        </p>
+      </div>
+
+      <!-- E) MODLITWA DNIA -->
+      <div class="dzis-section">
+        <div class="dzis-section-label"><i class="fa-solid fa-dove" style="margin-right:5px;"></i>Modlitwa dnia</div>
+        <div class="dzis-prayer-text" id="dzis-prayer-text">—</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;" id="dzis-prayer-title"></div>
+      </div>
+
+      <!-- F) NAJBLIŻSZE WYDARZENIE -->
+      <div class="dzis-section" id="dzis-event-section">
+        <div class="dzis-section-label"><i class="fa-solid fa-calendar-check" style="margin-right:5px;"></i>Najbliższe ogłoszenie</div>
+        <div id="dzis-event-card"></div>
+      </div>
+
     </div>
   </div>
 
@@ -4109,6 +4306,174 @@
         });
       }
 
+      // --- 3c. MODUŁ DZIŚ W PARAFII ---
+      const dzisModal   = document.getElementById('dzis-modal');
+      const dzisBackBtn = document.getElementById('dzisBackBtn');
+
+      // Admin flag — hardcoded na teraz; admin przestawi w przyszłym panelu
+      const urgentToday = false;
+      // (badge na nav-dzis pojawi się gdy urgentToday === true)
+      const navDzisBadge = document.getElementById('nav-dzis-badge');
+      if (navDzisBadge) navDzisBadge.style.display = urgentToday ? 'flex' : 'none';
+
+      // Modlitwy do rotacji po dacie (z pmbPrayers — tu skrócone wersje)
+      const dzisRotationPrayers = [
+        {
+          title: 'Modlitwa poranna',
+          text: 'Boże, Stwórco dnia i nocy, dziękuję Ci, że strzegłeś mnie tej nocy i pozwoliłeś mi doczekać tego poranka. Ofiaruję Ci ten nowy dzień: moje myśli, słowa i czyny, moje radości i smutki. Niech wszystko, co uczynię, będzie na Twoją chwałę. Amen.'
+        },
+        {
+          title: 'Ojcze Nasz',
+          text: 'Ojcze nasz, któryś jest w niebie, święć się imię Twoje; przyjdź królestwo Twoje; bądź wola Twoja jako w niebie, tak i na ziemi. Chleba naszego powszedniego daj nam dzisiaj; i odpuść nam nasze winy, jako i my odpuszczamy naszym winowajcom; i nie wódź nas na pokuszenie, ale nas zbaw ode złego. Amen.'
+        },
+        {
+          title: 'Anioł Pański',
+          text: 'Anioł Pański zwiastował Pannie Maryi i poczęła z Ducha Świętego. Oto ja służebnica Pańska, niech mi się stanie według słowa Twego. A Słowo stało się Ciałem i zamieszkało między nami. Módl się za nami, Święta Boża Rodzicielko, abyśmy się stali godnymi obietnic Chrystusowych. Amen.'
+        },
+        {
+          title: 'Pod Twoją obronę',
+          text: 'Pod Twoją obronę uciekamy się, Święta Boża Rodzicielko, naszymi prośbami racz nie gardzić w potrzebach naszych, ale od wszelkich złych przygód racz nas zawsze wybawiać, Panno chwalebna i błogosławiona. Amen.'
+        },
+        {
+          title: 'Modlitwa wieczorna',
+          text: 'Boże, w Trójcy Świętej jedyny, dziękuję Ci za ten dzień miniony, za wszystkie łaski i dary, które mi zsyłałeś. Przepraszam Cię za wszystkie grzechy i uchybienia. Proszę Cię, czuwaj nade mną tej nocy, daj mi spokojny sen, abym jutro wypoczęty służył Tobie i bliźnim. Amen.'
+        },
+        {
+          title: 'Modlitwa do Anioła Stróża',
+          text: 'Aniele Boży, Stróżu mój, Ty zawsze przy mnie stój. Rano, wieczór, we dnie, w nocy bądź mi zawsze ku pomocy. Strzeż duszy, ciała mego, zaprowadź mnie do żywota wiecznego. Amen.'
+        },
+        {
+          title: 'Koronka do Miłosierdzia Bożego',
+          text: 'Ojcze Przedwieczny, ofiaruję Ci Ciało i Krew, Duszę i Bóstwo najmilszego Syna Twojego, Pana naszego Jezusa Chrystusa, na przebłaganie za grzechy nasze i świata całego. Dla Jego bolesnej Męki miej miłosierdzie dla nas i całego świata. Amen.'
+        }
+      ];
+
+      // Tygodniowy hardcoded rozkład mszy (niedziela=0)
+      const MASS_SCHEDULE_WEEK = {
+        0: ['8:00', '10:00', '12:00'],   // niedziela i święta
+        1: ['8:00', '17:00'],
+        2: ['8:00', '17:00'],
+        3: ['8:00', '17:00'],
+        4: ['8:00', '17:00'],
+        5: ['8:00', '17:00'],
+        6: ['8:00', '17:00']             // sobota
+      };
+
+      function renderDzisModal() {
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+
+        // A) Nagłówek liturgiczny
+        const daysNames = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
+        const monthNames = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'];
+        const dateStr = `${daysNames[dayOfWeek]}, ${today.getDate()} ${monthNames[today.getMonth()]} ${today.getFullYear()} r.`;
+        const dateTitle = document.getElementById('dzis-date-title');
+        if (dateTitle) dateTitle.textContent = dateStr;
+
+        const liturgySub = document.getElementById('dzis-liturgy-sub');
+        if (liturgySub) {
+          let litInfo = '';
+          if (window.BREWIARZ && window.BREWIARZ.obliczTydzien) {
+            const info = window.BREWIARZ.obliczTydzien(today);
+            litInfo = info.tytul || '';
+            const tyg = window.BREWIARZ.opisTygodnia ? window.BREWIARZ.opisTygodnia(today) : '';
+            if (tyg) litInfo += (litInfo ? '  ·  ' : '') + tyg;
+          }
+          liturgySub.textContent = litInfo || 'Rok liturgiczny';
+        }
+
+        // B) Msze dziś
+        const massesList = document.getElementById('dzis-masses-list');
+        if (massesList) {
+          const hours = MASS_SCHEDULE_WEEK[dayOfWeek] || ['8:00','17:00'];
+          massesList.innerHTML = hours.map(h =>
+            `<div class="dzis-mass-row"><span class="dzis-mass-time">${h}</span><span class="dzis-mass-intention">Msza Święta</span></div>`
+          ).join('');
+        }
+
+        // C) Intencje dziś — dopasowanie po dzisiejszej nazwie dnia
+        const intentionsList = document.getElementById('dzis-intentions-list');
+        if (intentionsList) {
+          const todayDayName = daysNames[dayOfWeek];
+          // Szukamy wpisu w mockNews który zawiera dzisiejszą nazwę dnia w polu date
+          const todayEntry = mockNews.filter(n => n.category === 'intencje' && n.date && n.date.startsWith(todayDayName));
+          if (todayEntry.length === 0) {
+            intentionsList.innerHTML = '<div style="color:rgba(255,255,255,0.45);font-size:13px;">Brak intencji na dziś.</div>';
+          } else {
+            intentionsList.innerHTML = todayEntry.map(e =>
+              (e.masses || []).map(m => {
+                const dashIdx = m.indexOf(' - ');
+                const time = dashIdx > -1 ? m.slice(0, dashIdx).trim() : m;
+                const intention = dashIdx > -1 ? m.slice(dashIdx + 3).trim() : '';
+                return `<div class="dzis-mass-row"><span class="dzis-mass-time">${time}</span><span class="dzis-mass-intention">${intention}</span></div>`;
+              }).join('')
+            ).join('');
+          }
+        }
+
+        // D) Brewiarz — otwierają Liturgię Godzin
+        const btnJ = document.getElementById('dzis-btn-jutrznia');
+        const btnN = document.getElementById('dzis-btn-nieszpory');
+        const prayersModal = document.getElementById('prayers-modal');
+        if (btnJ && prayersModal) {
+          btnJ.onclick = () => {
+            window.closeAppModal(dzisModal);
+            window.openAppModal(prayersModal, 'liturgia');
+            // Przełącz na widok Brewiarza (zakładka 2 = Brewiarz)
+            const brwTab = document.querySelector('[data-view="2"]');
+            if (brwTab) brwTab.click();
+          };
+        }
+        if (btnN && prayersModal) {
+          btnN.onclick = () => {
+            window.closeAppModal(dzisModal);
+            window.openAppModal(prayersModal, 'liturgia');
+            const brwTab = document.querySelector('[data-view="2"]');
+            if (brwTab) brwTab.click();
+          };
+        }
+
+        // E) Modlitwa dnia — rotacja po dayOfYear
+        const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+        const prayer = dzisRotationPrayers[dayOfYear % dzisRotationPrayers.length];
+        const prayerText = document.getElementById('dzis-prayer-text');
+        const prayerTitle = document.getElementById('dzis-prayer-title');
+        if (prayerText) prayerText.textContent = prayer.text;
+        if (prayerTitle) prayerTitle.textContent = '— ' + prayer.title;
+
+        // F) Najbliższe ogłoszenie (category=ogloszenia z datą >= dziś lub pierwsze dostępne)
+        const eventCard = document.getElementById('dzis-event-card');
+        if (eventCard) {
+          const ogloszenia = mockNews.filter(n => n.category === 'ogloszenia');
+          const nearest = ogloszenia[0] || null;
+          if (!nearest) {
+            eventCard.innerHTML = '<div style="color:rgba(255,255,255,0.45);font-size:13px;">Brak ogłoszeń.</div>';
+          } else {
+            const annText = nearest.announcements && nearest.announcements[0] ? nearest.announcements[0] : '';
+            eventCard.innerHTML = `
+              <div class="dzis-event-card" role="button" tabindex="0" aria-label="Otwórz aktualności" id="dzis-event-open">
+                <div class="dzis-event-title">${nearest.title}</div>
+                <div class="dzis-event-date">${nearest.date}</div>
+                ${annText ? `<div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:4px;">${annText.substring(0,80)}${annText.length>80?'…':''}</div>` : ''}
+              </div>`;
+            const openEvt = document.getElementById('dzis-event-open');
+            const newsModalEl = document.getElementById('news-modal');
+            if (openEvt && newsModalEl) {
+              const openNews = () => {
+                window.closeAppModal(dzisModal);
+                window.openAppModal(newsModalEl, 'aktualnosci');
+              };
+              openEvt.addEventListener('click', openNews);
+              openEvt.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') openNews(); });
+            }
+          }
+        }
+      }
+
+      if (dzisBackBtn && dzisModal) {
+        dzisBackBtn.addEventListener('click', () => window.closeAppModal(dzisModal));
+      }
+
       // --- WSPÓLNOTY I GRUPY ---
       const communitiesModal = document.getElementById('communities-modal');
       const communitiesTile = document.getElementById('tile-groups');
@@ -5148,6 +5513,12 @@
                 document.getElementById('pm-dashboard').style.display = 'flex';
                 var subviews = document.querySelectorAll('.pm-subview');
                 subviews.forEach(function(sv) { sv.style.display = 'none'; });
+              }
+            } else if (id === 'nav-dzis') {
+              var dzisM = document.getElementById('dzis-modal');
+              if (dzisM) {
+                if (typeof renderDzisModal === 'function') renderDzisModal();
+                window.openAppModal(dzisM, 'dzis');
               }
             } else {
               if (modalTitle && modalBody && genericModal) {
