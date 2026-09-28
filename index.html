@@ -2114,6 +2114,37 @@
 </head>
 
 <body>
+
+  <!-- BANER AKTUALIZACJI SW -->
+  <div id="sw-update-banner" role="alert" aria-live="assertive" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 99999;
+    background: linear-gradient(90deg, #1a3a5c 0%, #2a5a8c 100%);
+    color: #fff;
+    padding: 12px 16px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+  ">
+    <span>🔄 Dostępna nowa wersja &mdash; dotknij, aby odświeżyć</span>
+    <button onclick="location.reload()" style="
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    " onmouseover="this.style.background='rgba(255,255,255,0.28)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">Odśwież</button>
+  </div>
   <script>
     (function() {
       var defaultSettings = { layout: '1', theme: 'dark', fontScale: 'A', sound: 'true' };
@@ -3771,13 +3802,27 @@
         renderChecklist();
       }, 500);
 
-      // --- 0. ZABICIE SERVICE WORKERA (aby wymusić odświeżenie cache'u) ---
+      // --- 0. REJESTRACJA SERVICE WORKERA + baner aktualizacji ---
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function (registrations) {
-          for (let registration of registrations) {
-            registration.unregister();
-            console.log("Usunięto stary Service Worker");
+        let firstInstall = !navigator.serviceWorker.controller;
+
+        navigator.serviceWorker.register('./service-worker.js')
+          .then((reg) => {
+            console.log('[SW] Zarejestrowano:', reg.scope);
+          })
+          .catch((err) => {
+            console.warn('[SW] Błąd rejestracji:', err);
+          });
+
+        // Baner aktualizacji: pokaż tylko gdy SW przejmuje kontrolę po raz kolejny
+        // (nie przy pierwszej instalacji, gdy firstInstall === true)
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (firstInstall) {
+            firstInstall = false; // kontroler pojawia się pierwszy raz — cicho
+            return;
           }
+          const banner = document.getElementById('sw-update-banner');
+          if (banner) banner.style.display = 'flex';
         });
       }
 
