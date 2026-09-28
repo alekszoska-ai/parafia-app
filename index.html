@@ -3065,17 +3065,17 @@
 
       <!-- Linki do pełnego Brewiarza PDF -->
       <div style="padding: 0 16px 16px;">
-        <a class="tile" href="./assets/docs/BREWIARZ-cz1.pdf" target="_blank" style="margin-bottom: 8px;">
+        <a class="tile" href="./assets/docs/BREWIARZ-cz1.pdf" target="_blank" style="margin-bottom: 8px; display:none;">
           <div class="tile__chip"><i class="fa-solid fa-book-bible" style="color:var(--ink); font-size:24px;"></i></div>
           <span class="tile__label">Brewiarz — część 1</span>
           <i class="fa-solid fa-download tile__chevron"></i>
         </a>
-        <a class="tile" href="./assets/docs/BREWIARZ-cz2.pdf" target="_blank" style="margin-bottom: 8px;">
+        <a class="tile" href="./assets/docs/BREWIARZ-cz2.pdf" target="_blank" style="margin-bottom: 8px; display:none;">
           <div class="tile__chip"><i class="fa-solid fa-book-bible" style="color:var(--ink); font-size:24px;"></i></div>
           <span class="tile__label">Brewiarz — część 2</span>
           <i class="fa-solid fa-download tile__chevron"></i>
         </a>
-        <a class="tile" href="./assets/docs/BREWIARZ-cz3.pdf" target="_blank">
+        <a class="tile" href="./assets/docs/BREWIARZ-cz3.pdf" target="_blank" style="display:none;">
           <div class="tile__chip"><i class="fa-solid fa-book-bible" style="color:var(--ink); font-size:24px;"></i></div>
           <span class="tile__label">Brewiarz — część 3</span>
           <i class="fa-solid fa-download tile__chevron"></i>
@@ -3428,6 +3428,7 @@
       <!-- ZAKŁADKA 1: NADCHODZĄCE PIELGRZYMKI -->
       <div id="tab-pielgrzymki" class="pilgrim-content active" role="tabpanel">
         
+        <!-- ADMIN: migracja do Supabase (etap 2) — dane pielgrzymek poniżej są statyczne; docelowo pobierane przez REST API z tabeli `pilgrimages` -->
         <!-- ADMIN: podmienić na dane z panelu (etap 3) -->
         <div class="pilgrim-card">
           <div class="pilgrim-type-chip" style="background: rgba(59, 103, 151, 0.2); color: #7ab8ff;">🚌 Autokarowa</div>
@@ -4319,8 +4320,19 @@
         });
       });
 
-      // --- 5. OBSŁUGA POZOSTAŁYCH KAFELKÓW (Zastępczy modal) ---
-      const genericTiles = document.querySelectorAll('#tile-pilgrim, #tile-assistant');
+      // --- 5. OBSŁUGA #tile-pilgrim → dedykowany pilgrim-modal ---
+      const pilgrimTile = document.getElementById('tile-pilgrim');
+      const pilgrimModal = document.getElementById('pilgrim-modal');
+
+      if (pilgrimTile && pilgrimModal) {
+        pilgrimTile.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.openAppModal(pilgrimModal, 'pielgrzym');
+        });
+      }
+
+      // --- 5b. OBSŁUGA POZOSTAŁYCH KAFELKÓW (Zastępczy modal — placeholder przyszłych modułów) ---
+      const genericTiles = document.querySelectorAll('#tile-assistant');
       const genericModal = document.getElementById('modalOverlay');
       const modalTitle = document.getElementById('modalTitle');
       const modalBody = document.getElementById('modalBody');
